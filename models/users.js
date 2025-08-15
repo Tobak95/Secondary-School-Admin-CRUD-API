@@ -33,11 +33,6 @@ const userSchema = new schema(
       minLength: [true, "Password is required"],
       required: [true, "Password is required"],
     },
-
-    verificationToken: String,
-    verificationTokenExpires: Date,
-    resetPasswordToken: String,
-    resetPasswordExpires: Date,
   },
   { timestamps: true }
 );
