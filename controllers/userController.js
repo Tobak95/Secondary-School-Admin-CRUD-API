@@ -28,7 +28,6 @@ const handleRegister = async (req, res) => {
       email,
       phoneNumber,
       role: role || "user",
-      password: hashedPassword,
     });
 
     return res
@@ -42,8 +41,8 @@ const handleRegister = async (req, res) => {
 
 //handling log-in with the already registered unique email and password
 const handleLogin = async (req, res) => {
-  const { email, password, role } = req.body;
-  if (!email || !password || !role) {
+  const { email, password } = req.body;
+  if (!email || !password) {
     return res.status(400).json({ message: "Email and password are required" });
   }
 
@@ -54,12 +53,6 @@ const handleLogin = async (req, res) => {
       return res
         .status(401)
         .json({ message: "Account not found, Please Register" });
-    }
-
-    if (user.role != role) {
-      return res
-        .status(403)
-        .json({ success: false, message: "unauthorize access for this role" });
     }
 
     //checking if password is correct while the user is logging in
@@ -88,7 +81,6 @@ const handleLogin = async (req, res) => {
         fullName: user.fullName,
         email: user.email,
         phoneNumber: user.phoneNumber,
-        role: user.role,
       },
     });
   } catch (error) {

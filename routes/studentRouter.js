@@ -12,7 +12,18 @@ const { isLoggedIn, requirePermission } = require("../middleware/auth");
 // router.use(isLoggedIn);
 
 router.post("/create", isLoggedIn, requirePermission("admin"), createStudent);
-router.get("/get", isLoggedIn, requirePermission("admin"), getAllStudent);
+router.get(
+  "/get",
+  isLoggedIn,
+  requirePermission("admin", "user"),
+  getAllStudent
+);
+// router.get(
+//   "/getStudentById/:id",
+//   isLoggedIn,
+//   requirePermission(["admin", "user"]),
+//   getStudent
+// );
 router.patch(
   "/:studentId",
   isLoggedIn,

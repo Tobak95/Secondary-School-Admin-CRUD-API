@@ -5,7 +5,10 @@ const jwt = require("jsonwebtoken");
 const isLoggedIn = (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer")) {
-    return res.status(401).json({ message: "Unauthorized, Please provide a Bearer Token to access this role" });
+    return res.status(401).json({
+      message:
+        "Unauthorized, Please provide a Bearer Token to access this role",
+    });
   }
   const token = authHeader.split(" ")[1];
 
@@ -33,7 +36,7 @@ const isLoggedIn = (req, res, next) => {
 const requirePermission = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
-      res.status(403).json({ message: "Unauthorized to assess this route" });
+      res.status(403).json({ message: "Forbidden. Admins only" });
     }
     next();
   };
