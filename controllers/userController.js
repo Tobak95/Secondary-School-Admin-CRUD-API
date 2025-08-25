@@ -2,20 +2,24 @@ const USER = require("../models/users");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const handleRegister = async (req, res) => {
-  //Accepts user details (e.g., name, email, password)
+const handleRegister = async (req, res) => { 
+
+  //destructuring login details from the req.body
   const { fullName, email, phoneNumber, role, password } = req.body;
 
   try {
-    //This function is checking if the user already exists in the dB
+    if (!(fullName, email, phoneNumber, role, password)) {
+      res.status(400).json({ message: "All fields are compulsory" });
+    }
 
+    //First is checking, if the user already exists in the dataBase
     const alreadyExistingUser = await USER.findOne({
       $or: [{ email: email || null }, { phoneNumber: phoneNumber || null }],
     });
     if (alreadyExistingUser) {
-      res
-        .status(400)
-        .json({ message: "User with email or phone number already exists" });
+      res.status(400).json({
+        message: "User already exists with this email and phone number",
+      });
     }
 
     //protecting user password. Hashes passwords using bcrypt before storing in the database.
@@ -28,7 +32,9 @@ const handleRegister = async (req, res) => {
       email,
       phoneNumber,
       role: role || "user",
+      password: hashedPassword,
     });
+    user.password = undefined;
 
     return res
       .status(201)
@@ -39,10 +45,9 @@ const handleRegister = async (req, res) => {
   }
 };
 
-//handling log-in with the already registered unique email and password
 const handleLogin = async (req, res) => {
   const { email, password } = req.body;
-  if (!email || !password) {
+  if (!(email && password)) {
     return res.status(400).json({ message: "Email and password are required" });
   }
 
